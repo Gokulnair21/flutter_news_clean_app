@@ -22,10 +22,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) {
-          debugPrint("Created");
-          return getIt.get<TopHighLightBloc>();
-        })
+        BlocProvider(create: (_) => getIt.get<TopHighLightBloc>()),
+        BlocProvider(create: (_) => getIt.get<LatestNewsBloc>())
       ],
       child: MaterialApp.router(
         localizationsDelegates: AppLocalizations.localizationsDelegates,

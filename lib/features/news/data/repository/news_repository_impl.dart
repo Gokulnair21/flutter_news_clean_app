@@ -6,14 +6,24 @@ import 'package:news_app/features/news/domain/repository/news_repository.dart';
 
 @Injectable(as: NewsRepository)
 class NewsRepositoryImpl implements NewsRepository {
-  final NetworkManager networkManager;
+  final NetworkManager _networkManager;
 
-  NewsRepositoryImpl(this.networkManager);
+  NewsRepositoryImpl(this._networkManager);
 
   @override
   Future<ApiResult> getTopHeadLines() async {
-    final res = await networkManager
+    final res = await _networkManager
         .get(endPoint: "top-headlines", queryParams: {"country": "in"});
+    if (res is ApiSuccess) {
+      return ApiSuccess(NewsListResponse.fromJson(res.value));
+    }
+    return res;
+  }
+
+  @override
+  Future<ApiResult> getAllNews(String category) async {
+    final res = await _networkManager
+        .get(endPoint: "everything", queryParams: {"q": category});
     if (res is ApiSuccess) {
       return ApiSuccess(NewsListResponse.fromJson(res.value));
     }

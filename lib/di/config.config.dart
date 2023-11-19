@@ -16,6 +16,7 @@ import '../core/network/dio_service/dio_service.dart' as _i5;
 import '../core/network/network_manager.dart' as _i4;
 import '../features/news/data/repository/news_repository_impl.dart' as _i7;
 import '../features/news/domain/repository/news_repository.dart' as _i6;
+import '../features/news/domain/usecase/latest_news_usecase.dart' as _i10;
 import '../features/news/domain/usecase/top_head_line_usecase.dart' as _i8;
 import '../features/news/presentation/home/bloc/home_bloc.dart' as _i9;
 
@@ -38,6 +39,10 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i8.TopHeadlineUseCase(gh<_i6.NewsRepository>()));
     gh.factory<_i9.TopHighLightBloc>(
         () => _i9.TopHighLightBloc(gh<_i8.TopHeadlineUseCase>()));
+    gh.factory<_i10.LatestNewsUseCase>(
+        () => _i10.LatestNewsUseCase(gh<_i6.NewsRepository>()));
+    gh.factory<_i9.LatestNewsBloc>(
+        () => _i9.LatestNewsBloc(gh<_i10.LatestNewsUseCase>()));
     return this;
   }
 }

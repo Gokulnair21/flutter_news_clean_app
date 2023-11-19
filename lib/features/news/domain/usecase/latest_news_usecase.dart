@@ -6,14 +6,14 @@ import 'package:news_app/features/news/domain/entity/news.dart';
 import 'package:news_app/features/news/domain/repository/news_repository.dart';
 
 @Injectable()
-class TopHeadlineUseCase implements UseCase<List<News>, String> {
+class LatestNewsUseCase implements UseCase<List<News>, String> {
   final NewsRepository _newsRepository;
 
-  TopHeadlineUseCase(this._newsRepository);
+  LatestNewsUseCase(this._newsRepository);
 
   @override
   Future<List<News>> call(String params) async {
-    final res = await _newsRepository.getTopHeadLines();
+    final res = await _newsRepository.getAllNews(params);
     if (res is ApiSuccess) {
       final value = res.value as NewsListResponse;
       return value.articles

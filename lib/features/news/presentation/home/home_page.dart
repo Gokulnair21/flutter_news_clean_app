@@ -1,11 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:news_app/common_widgets/shimmer.dart';
 import 'package:news_app/features/news/presentation/home/bloc/home_event.dart';
 import 'package:news_app/features/news/presentation/home/bloc/home_state.dart';
+import 'package:news_app/features/news/presentation/home/widgets/higlight_loading.dart';
+import 'package:news_app/features/news/presentation/home/widgets/news_list_item_card.dart';
+import 'package:news_app/features/news/presentation/home/widgets/news_list_item_loading.dart';
+import 'package:news_app/route/app_routes.dart';
 
 import 'bloc/home_bloc.dart';
-import 'news_item_highlight_card.dart';
+import 'widgets/news_item_highlight_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,11 +21,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  Future<void> _onRefresh()async{
+    context.read<TopHighLightBloc>().add(LoadData());
+    context.read<LatestNewsBloc>().add(LoadLatestNews());
+  }
   @override
   void initState() {
     super.initState();
     context.read<TopHighLightBloc>().add(LoadData());
-    // getIt.get<TopHighLightBloc>().add(LoadData());
+    context.read<LatestNewsBloc>().add(LoadLatestNews());
   }
 
   @override
@@ -37,55 +48,118 @@ class _HomePageState extends State<HomePage> {
       //   ],
       // ),
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
-                child: _headline(AppLocalizations.of(context)!.top_headline),
+        body: RefreshIndicator(
+          onRefresh: _onRefresh,
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+                  child: _headline(AppLocalizations.of(context)!.top_headline),
+                ),
               ),
-            ),
-            BlocConsumer<TopHighLightBloc, TopHighLightState>(
-                listenWhen: (oldState, newState) {
-                  return newState is TopHighlightAction;
+              BlocConsumer<TopHighLightBloc, TopHighLightState>(
+                  listenWhen: (oldState, newState) {
+                return newState is TopHighlightAction;
+              }, listener: (context, state) {
+                if (state is NavigateToDetailsPage) {
+                  context.goNamed(AppRoutes.DETAILS_PAGE, extra: state.news);
+                }
+                //Navigation Part
+              }, buildWhen: (oldState, newState) {
+                return newState is! TopHighlightAction;
+              }, builder: (context, state) {
+                if (state is TopHigLightDataLoaded) {
+                  return SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 300,
+                      child: ListView.builder(
+                        itemCount: state.news.length,
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return NewsHiglightCard(
+                            news: state.news[index],
+                            callbackAction: () {
+                              context
+                                  .read<TopHighLightBloc>()
+                                  .add(NavigateToDetails(state.news[index]));
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                } else if (state is TopHigLightLoading) {
+                  return SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 300,
+                      child: Shimmer(
+                        child: ListView.builder(
+                          itemCount: 5,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) =>
+                              const HighLightLoading(),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return _noDataFoundSliver();
+              }),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+                  child: _headline(AppLocalizations.of(context)!.latest_news),
+                ),
+              ),
+              BlocConsumer<LatestNewsBloc, LatestNewsState>(
+                listener: (context, state) {
+                  if (state is LatestNewsToNavigateDetails) {
+                    context.goNamed(AppRoutes.DETAILS_PAGE, extra: state.news);
+                  }
                 },
-                listener: (context, state) {},
-                buildWhen: (oldState, newState) {
-                  return newState is! TopHighlightAction;
+                listenWhen: (oldState, newState) {
+                  return newState is LatestNewsAction;
+                },
+                buildWhen: (oldState, currentState) {
+                  return currentState is! LatestNewsAction;
                 },
                 builder: (context, state) {
-                  if (state is TopHigLightDataLoaded) {
+                  if (state is LatestNewsLoading) {
                     return SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 300,
+                      child: Shimmer(
                         child: ListView.builder(
-                          itemCount: state.news.length,
-                          scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return NewsHiglightCard(news: state.news[index]);
+                            return const NewsListItemLoading();
                           },
+                          itemCount: 10,
                         ),
                       ),
                     );
+                  } else if (state is LatestNewsLoaded) {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return NewsListItemCard(
+                              news: state.news[index],
+                              callback: () {
+                                context
+                                    .read<LatestNewsBloc>()
+                                    .add(LatestNewsToDetails(state.news[index]));
+                              });
+                        },
+                        childCount: state.news.length,
+                      ),
+                    );
                   }
-                  return SliverToBoxAdapter();
-                }),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
-                child: _headline(AppLocalizations.of(context)!.latest_news),
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  //return  NewsListItemCard();
+                  return _noDataFoundSliver();
                 },
-                childCount: 30,
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -96,6 +170,20 @@ class _HomePageState extends State<HomePage> {
       text,
       style: const TextStyle(
           color: Colors.black, fontWeight: FontWeight.w800, fontSize: 18),
+    );
+  }
+
+  Widget _noDataFoundSliver() {
+    return const SliverToBoxAdapter(
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Text(
+            "No Data Found",
+            style: TextStyle(color: Colors.red, fontSize: 15),
+          ),
+        ),
+      ),
     );
   }
 }

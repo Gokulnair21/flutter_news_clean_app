@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:news_app/features/news/domain/entity/news.dart';
 import 'package:news_app/util/extension/ui_extension.dart';
 
@@ -14,11 +15,28 @@ class DetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
-              news.thumbnail!,
-              fit: BoxFit.fill,
+            SizedBox(
               height: 300,
-              width: double.infinity,
+              child: Stack(
+                children: [
+                  Image.network(
+                    news.thumbnail ?? "https://source.unsplash.com/random",
+                    fit: BoxFit.fill,
+                    width: double.infinity,
+                    height: double.infinity,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 40, left: 20),
+                      child: IconButton(
+                          onPressed: () {
+                            context.pop();
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                          )))
+                ],
+              ),
             ),
             const SizedBox().verticalGap(2),
             Padding(

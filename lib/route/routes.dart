@@ -13,6 +13,7 @@ final router = GoRouter(
       builder: (context, state) => const HomePage(),
       routes: [
         GoRoute(
+          name: AppRoutes.DETAILS_PAGE,
           path: AppRoutes.DETAILS_PAGE,
           builder: (context, state) {
             final news = state.extra as News;
