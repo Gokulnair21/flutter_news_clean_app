@@ -9,10 +9,10 @@ class NewsHiglightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: callbackAction,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: callbackAction,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: SizedBox(

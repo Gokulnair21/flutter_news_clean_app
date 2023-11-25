@@ -11,12 +11,12 @@ class NewsListItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: callback,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: InkWell(
+          onTap: callback,
           child: Row(
             children: [
               Image.network(

@@ -29,33 +29,3 @@ class NavigateToDetailsPage extends TopHighlightAction {
 
   NavigateToDetailsPage(this.news);
 }
-
-//*********************Latest News State********************
-
-abstract class LatestNewsState extends Equatable {
-  @override
-  List<Object?> get props => [];
-}
-
-class LatestNewsLoading extends LatestNewsState {}
-
-class LatestNewsLoaded extends LatestNewsState {
-  final List<News> news;
-
-  LatestNewsLoaded(this.news);
-
-  @override
-  List<Object?> get props => [news];
-}
-
-class LatestNewsError extends LatestNewsState {}
-
-class LatestNewsAction extends LatestNewsState {}
-
-class LatestNewsToNavigateDetails extends LatestNewsAction {
-  final News news;
-
-  @override
-  List<Object?> get props => [news];
-  LatestNewsToNavigateDetails(this.news);
-}

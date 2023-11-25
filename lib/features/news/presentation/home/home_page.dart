@@ -3,14 +3,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_app/common_widgets/shimmer.dart';
-import 'package:news_app/features/news/presentation/home/bloc/home_event.dart';
-import 'package:news_app/features/news/presentation/home/bloc/home_state.dart';
+import 'package:news_app/features/news/presentation/home/widgets/filter_widget.dart';
 import 'package:news_app/features/news/presentation/home/widgets/higlight_loading.dart';
 import 'package:news_app/features/news/presentation/home/widgets/news_list_item_card.dart';
 import 'package:news_app/features/news/presentation/home/widgets/news_list_item_loading.dart';
 import 'package:news_app/route/app_routes.dart';
-
-import 'bloc/home_bloc.dart';
+import 'package:news_app/util/extension/ui_extension.dart';
+import 'bloc/latest_news/latest_news_bloc.dart';
+import 'bloc/latest_news/latest_news_event.dart';
+import 'bloc/latest_news/latest_news_state.dart';
+import 'bloc/top_high_light/top_high_light_bloc.dart';
+import 'bloc/top_high_light/top_high_light_event.dart';
+import 'bloc/top_high_light/top_high_light_state.dart';
 import 'widgets/news_item_highlight_card.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,11 +25,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  Future<void> _onRefresh()async{
+  Future<void> _onRefresh() async {
     context.read<TopHighLightBloc>().add(LoadData());
     context.read<LatestNewsBloc>().add(LoadLatestNews());
   }
+
   @override
   void initState() {
     super.initState();
@@ -114,6 +118,36 @@ class _HomePageState extends State<HomePage> {
                   child: _headline(AppLocalizations.of(context)!.latest_news),
                 ),
               ),
+              BlocBuilder<LatestNewsBloc, LatestNewsState>(
+                buildWhen: (oldState, newState) {
+                  return newState is FilterChanged;
+                },
+                builder: (context, state) {
+                  return SliverToBoxAdapter(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      height: 40,
+                      child: ListView.builder(
+                        itemCount: context
+                            .read<LatestNewsBloc>()
+                            .latestNewsFilter
+                            .length,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          final data = context
+                              .read<LatestNewsBloc>()
+                              .latestNewsFilter[index];
+                          return FilterWidget(filter: data);
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+              SliverToBoxAdapter(
+                child: const SizedBox().verticalGap(10),
+              ),
               BlocConsumer<LatestNewsBloc, LatestNewsState>(
                 listener: (context, state) {
                   if (state is LatestNewsToNavigateDetails) {
@@ -146,9 +180,8 @@ class _HomePageState extends State<HomePage> {
                           return NewsListItemCard(
                               news: state.news[index],
                               callback: () {
-                                context
-                                    .read<LatestNewsBloc>()
-                                    .add(LatestNewsToDetails(state.news[index]));
+                                context.read<LatestNewsBloc>().add(
+                                    LatestNewsToDetails(state.news[index]));
                               });
                         },
                         childCount: state.news.length,

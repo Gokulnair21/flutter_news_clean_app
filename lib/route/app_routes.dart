@@ -1,4 +1,3 @@
-import 'package:news_app/features/news/presentation/home/home_page.dart';
 
 class AppRoutes {
   AppRoutes._();

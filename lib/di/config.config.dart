@@ -18,7 +18,10 @@ import '../features/news/data/repository/news_repository_impl.dart' as _i7;
 import '../features/news/domain/repository/news_repository.dart' as _i6;
 import '../features/news/domain/usecase/latest_news_usecase.dart' as _i10;
 import '../features/news/domain/usecase/top_head_line_usecase.dart' as _i8;
-import '../features/news/presentation/home/bloc/home_bloc.dart' as _i9;
+import '../features/news/presentation/home/bloc/latest_news/latest_news_bloc.dart'
+    as _i11;
+import '../features/news/presentation/home/bloc/top_high_light/top_high_light_bloc.dart'
+    as _i9;
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -41,8 +44,8 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i9.TopHighLightBloc(gh<_i8.TopHeadlineUseCase>()));
     gh.factory<_i10.LatestNewsUseCase>(
         () => _i10.LatestNewsUseCase(gh<_i6.NewsRepository>()));
-    gh.factory<_i9.LatestNewsBloc>(
-        () => _i9.LatestNewsBloc(gh<_i10.LatestNewsUseCase>()));
+    gh.factory<_i11.LatestNewsBloc>(
+        () => _i11.LatestNewsBloc(gh<_i10.LatestNewsUseCase>()));
     return this;
   }
 }
