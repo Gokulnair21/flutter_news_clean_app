@@ -24,8 +24,10 @@ class TopHighlightAction extends TopHighLightState {}
 class NavigateToDetailsPage extends TopHighlightAction {
   final News news;
 
+  final DateTime dateTime = DateTime.now();
+
   @override
-  List<Object?> get props => [news];
+  List<Object?> get props => [dateTime];
 
   NavigateToDetailsPage(this.news);
 }

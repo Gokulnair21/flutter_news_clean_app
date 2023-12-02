@@ -2,6 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:news_app/app/bloc/app_bloc.dart';
+import 'package:news_app/app/bloc/app_event.dart';
 import 'package:news_app/common_widgets/shimmer.dart';
 import 'package:news_app/features/news/presentation/home/widgets/filter_widget.dart';
 import 'package:news_app/features/news/presentation/home/widgets/higlight_loading.dart';
@@ -52,6 +54,12 @@ class _HomePageState extends State<HomePage> {
       //   ],
       // ),
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            context.read<AppBloc>().add(AppEventDarkModeToggled());
+          },
+          child: const Icon(Icons.light_mode),
+        ),
         body: RefreshIndicator(
           onRefresh: _onRefresh,
           child: CustomScrollView(
@@ -201,8 +209,7 @@ class _HomePageState extends State<HomePage> {
   Widget _headline(String text) {
     return Text(
       text,
-      style: const TextStyle(
-          color: Colors.black, fontWeight: FontWeight.w800, fontSize: 18),
+      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
     );
   }
 

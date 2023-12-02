@@ -38,9 +38,9 @@ class NewsListItemCard extends StatelessWidget {
                     Text(
                       news.title,
                       style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Colors.black87),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
                     ),
                     const SizedBox(
                       height: 10,
@@ -54,9 +54,9 @@ class NewsListItemCard extends StatelessWidget {
                       child: Text(
                         news.dateTime,
                         style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black54),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     )
                   ],

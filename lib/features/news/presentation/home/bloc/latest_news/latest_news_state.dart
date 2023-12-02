@@ -24,9 +24,10 @@ class LatestNewsAction extends LatestNewsState {}
 
 class LatestNewsToNavigateDetails extends LatestNewsAction {
   final News news;
+  final DateTime dateTime = DateTime.now();
 
   @override
-  List<Object?> get props => [news];
+  List<Object?> get props => [dateTime];
 
   LatestNewsToNavigateDetails(this.news);
 }
