@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:news_app/common_widgets/carousel.dart';
 import 'package:news_app/common_widgets/shimmer.dart';
 import 'package:news_app/features/news/presentation/home/widgets/filter_widget.dart';
 import 'package:news_app/features/news/presentation/home/widgets/higlight_loading.dart';
@@ -75,23 +76,23 @@ class _HomePageState extends State<HomePage> {
               }, builder: (context, state) {
                 if (state is TopHigLightDataLoaded) {
                   return SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 300,
-                      child: ListView.builder(
-                        itemCount: state.news.length,
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return NewsHiglightCard(
-                            news: state.news[index],
-                            callbackAction: () {
-                              context
-                                  .read<TopHighLightBloc>()
-                                  .add(NavigateToDetails(state.news[index]));
-                            },
-                          );
-                        },
-                      ),
+                    child: Carousel(
+                      height: 200,
+                      itemCount: state.news.length,
+                      showIndicator: false,
+                      selectedIndicatorColor: Colors.blue,
+                      unSelectedIndicatorColor: Colors.black12,
+                      itemBuilder: (context, index) {
+                        return NewsHiglightCard(
+                          news: state.news[index],
+                          callbackAction: () {
+                            context
+                                .read<TopHighLightBloc>()
+                                .add(NavigateToDetails(state.news[index]));
+                          },
+                        );
+                      },
+                      autoMoveDuration: const Duration(seconds: 4),
                     ),
                   );
                 } else if (state is TopHigLightLoading) {
@@ -178,11 +179,14 @@ class _HomePageState extends State<HomePage> {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           return NewsListItemCard(
-                              news: state.news[index],
-                              callback: () {
-                                context.read<LatestNewsBloc>().add(
-                                    LatestNewsToDetails(state.news[index]));
-                              });
+                            news: state.news[index],
+                            showDivider: !(index == state.news.length - 1),
+                            callback: () {
+                              context
+                                  .read<LatestNewsBloc>()
+                                  .add(LatestNewsToDetails(state.news[index]));
+                            },
+                          );
                         },
                         childCount: state.news.length,
                       ),

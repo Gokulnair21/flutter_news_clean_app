@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/features/news/domain/entity/news.dart';
 
+import '../../../../../common_widgets/network_image.dart';
+
 class NewsHiglightCard extends StatelessWidget {
-  const NewsHiglightCard({super.key, required this.news, required this.callbackAction});
+  const NewsHiglightCard(
+      {super.key, required this.news, required this.callbackAction});
+
   final VoidCallback callbackAction;
 
   final News news;
@@ -11,20 +15,19 @@ class NewsHiglightCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: InkWell(
+      child: GestureDetector(
         onTap: callbackAction,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: SizedBox(
-            width: 200,
-            height: 300,
+            width: double.infinity,
+            height: double.infinity,
             child: Stack(
               children: [
-                Image.network(
-                  news.thumbnail ?? "https://source.unsplash.com/random",
+                CachedNetworkImage(
+                  imageUrl: news.thumbnail,
                   height: double.infinity,
                   width: double.infinity,
-                  fit: BoxFit.fill,
                 ),
                 Container(
                   decoration: const BoxDecoration(
@@ -43,15 +46,13 @@ class NewsHiglightCard extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 10, left: 10),
                   child: Align(
                     alignment: Alignment.bottomLeft,
-                    child: Text(
-                      news.title,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 18),
-                      maxLines: 3,
-                      overflow: TextOverflow.fade
-                    ),
+                    child: Text(news.title,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 18),
+                        maxLines: 3,
+                        overflow: TextOverflow.fade),
                   ),
                 )
               ],
