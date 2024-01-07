@@ -5,7 +5,6 @@ import 'package:news_app/features/news/presentation/home/bloc/latest_news/latest
 import 'package:news_app/features/news/presentation/home/bloc/latest_news/latest_news_event.dart';
 import 'package:news_app/util/extension/string_extensions.dart';
 
-
 class FilterWidget extends StatelessWidget {
   final Filter filter;
 
@@ -18,18 +17,24 @@ class FilterWidget extends StatelessWidget {
       onTap: () {
         bloc.add(FilterSelected(filter: filter));
       },
-      child: Container(
+      child: AnimatedContainer(
         height: double.minPositive,
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         margin: const EdgeInsets.only(right: 8.0),
         decoration: BoxDecoration(
-            color: filter.isSelected ? Colors.blue : Colors.white,
-            borderRadius: BorderRadius.circular(20.0)),
-        child: Text(
-          filter.filter.capitalize(),
+          color: filter.isSelected ? Colors.blue : Colors.white,
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 200),
           style: TextStyle(
-            color: filter.isSelected ? Colors.white : Colors.black87,
+            color: filter.isSelected ? Colors.white : Colors.black45,
             fontSize: 15,
+          ),
+          child: Text(
+            filter.filter.capitalize(),
           ),
         ),
       ),
