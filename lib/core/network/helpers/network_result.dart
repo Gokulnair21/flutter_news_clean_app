@@ -1,4 +1,4 @@
-import 'package:news_app/core/network/api_error_response.dart';
+import 'package:news_app/core/network/helpers/api_error_response.dart';
 
 sealed class ApiResult {
   const ApiResult();

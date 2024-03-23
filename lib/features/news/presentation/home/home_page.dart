@@ -7,8 +7,8 @@ import 'package:news_app/features/news/presentation/home/widgets/filter_widget.d
 import 'package:news_app/features/news/presentation/home/widgets/higlight_loading.dart';
 import 'package:news_app/features/news/presentation/home/widgets/news_list_item_card.dart';
 import 'package:news_app/features/news/presentation/home/widgets/news_list_item_loading.dart';
-import 'package:news_app/route/app_routes.dart';
 import 'package:news_app/util/extension/ui_extension.dart';
+import '../../../../core/route/app_routes.dart';
 import 'bloc/latest_news/latest_news_bloc.dart';
 import 'bloc/latest_news/latest_news_event.dart';
 import 'bloc/latest_news/latest_news_state.dart';

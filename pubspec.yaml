@@ -47,6 +47,8 @@ dependencies:
   responsive_builder: ^0.7.0
   injectable: ^2.3.2
   flutter_dotenv: ^5.1.0
+  retrofit: ^4.1.0
+  retrofit_generator: ^8.1.0
 
 dev_dependencies:
   flutter_test:
