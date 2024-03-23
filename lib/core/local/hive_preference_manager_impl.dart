@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:news_app/core/local/preference_manager.dart';
 import 'package:path_provider/path_provider.dart';
@@ -39,8 +38,9 @@ class HivePreferenceManager implements PreferenceManager {
   static const DARK_MODE_STATUS = "DARK_MODE_STATUS";
 
   test() {
-    box.watch(key: DARK_MODE_STATUS).listen((event) {
-      print(event.toString());
-    });
+    Hive.box('settings').listenable();
+   return box.watch(key: DARK_MODE_STATUS);
   }
+
+
 }

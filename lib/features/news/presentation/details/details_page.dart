@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_app/features/news/domain/entity/news.dart';
 import 'package:news_app/util/extension/ui_extension.dart';
@@ -60,7 +61,8 @@ class DetailsPage extends StatelessWidget {
                     fontWeight: FontWeight.w400),
                 textAlign: TextAlign.justify,
               ),
-            )
+            ),
+            SvgPicture.asset("",height: 10,width: 10,)
           ],
         ),
       ),
